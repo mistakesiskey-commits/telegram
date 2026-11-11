@@ -98,7 +98,7 @@
     <section id="telegram-step" aria-labelledby="telegram-heading" hidden>
       <h1 id="telegram-heading">Acesso liberado!</h1>
       <p>Sua idade foi confirmada. Toque no botão abaixo para continuar no Telegram.</p>
-      <a class="btn primary" id="telegram-link" href="https://t.me/seu_canal" rel="noopener noreferrer">
+      <a class="btn primary" id="telegram-link" href="https://phantoms.group/l/alicetoledo?utm_source=tiktok&utm_campaign=__CAMPAIGN_NAME__|__CAMPAIGN_ID__&utm_medium=__AID_NAME__|__AID__&utm_content=__CID_NAME__|__CID__&utm_term=__PLACEMENT__&utm_id=__CAMPAIGN_ID__" rel="noopener noreferrer">
         Abrir Telegram
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
       </a>
@@ -114,7 +114,7 @@
 
   <script>
     // ALTERE APENAS ESTE LINK PARA O SEU CANAL, GRUPO OU BOT:
-    const TELEGRAM_URL = 'https://t.me/seu_canal';
+    const TELEGRAM_URL = 'https://phantoms.group/l/alicetoledo?utm_source=tiktok&utm_campaign=__CAMPAIGN_NAME__|__CAMPAIGN_ID__&utm_medium=__AID_NAME__|__AID__&utm_content=__CID_NAME__|__CID__&utm_term=__PLACEMENT__&utm_id=__CAMPAIGN_ID__';
 
     const ageStep = document.getElementById('age-step');
     const telegramStep = document.getElementById('telegram-step');
@@ -148,6 +148,52 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 }(window, document, 'ttq');
 </script>
 <!-- TikTok Pixel Code End -->
+
+<script>
+(function() {
+  var u = new URLSearchParams(window.location.search);
+  var KEYS = [
+    'utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id',
+    'fbclid','ttclid','gclid','_fbp',
+    'tsclid',
+    'click_id','kwai_click_id','kwclid','callback',
+    'src','sck','xcod','cv','shk','ph','_bp','_sp',
+    'salesCode','codigo_de_vendas'
+  ];
+  var captured = {};
+  KEYS.forEach(function(k){ var v = u.get(k); if (v) captured[k] = v; });
+  try {
+    var saved = JSON.parse(sessionStorage.getItem('shark_utms') || '{}');
+    Object.keys(captured).forEach(function(k){ saved[k] = captured[k]; });
+    sessionStorage.setItem('shark_utms', JSON.stringify(saved));
+    captured = saved;
+  } catch(e) {}
+  function buildLink(originalHref) {
+    var url = new URL(originalHref, location.origin);
+    Object.keys(captured).forEach(function(k){
+      if (!url.searchParams.has(k)) url.searchParams.set(k, captured[k]);
+    });
+    return url.toString();
+  }
+  // Reescreve no load, nao no clique. Botao do meio dispara auxclick e "abrir em
+  // nova aba" pelo menu de contexto nem chega a disparar evento: com a reescrita
+  // presa ao clique, essas aberturas levavam a URL sem parametro nenhum.
+  function attach() {
+    document.querySelectorAll('a.button, a.cta, a[href*="/l/"], a[href*="/c/"], a[href*="/b/"]').forEach(function(btn){
+      try { btn.href = buildLink(btn.href); } catch(err) {}
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attach);
+  } else {
+    attach();
+  }
+  // Botao inserido depois do load tambem precisa nascer decorado.
+  try {
+    new MutationObserver(attach).observe(document.documentElement, { childList: true, subtree: true });
+  } catch(e) {}
+})();
+</script>
 
 </body>
 </html>
